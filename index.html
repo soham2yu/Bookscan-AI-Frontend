@@ -4,11 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BOOKscan — Video to PDF Converter</title>
+
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <!-- FontAwesome fixed with crossorigin -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        crossorigin="anonymous">
 </head>
+
 <body>
-  <!-- Enhanced Background Animation -->
+  <!-- Background -->
   <div class="background">
     <div class="floating-shapes"></div>
     <div class="floating-shapes"></div>
@@ -25,13 +31,10 @@
     </div>
   </div>
 
-  <!-- Navigation -->
+  <!-- Navbar -->
   <nav class="navbar">
     <div class="nav-container">
-      <div class="nav-brand">
-        <i class="fas fa-book"></i>
-        BOOKscan
-      </div>
+      <div class="nav-brand"><i class="fas fa-book"></i> BOOKscan</div>
       <div class="nav-links">
         <a href="#features" class="nav-link">Features</a>
         <a href="#upload" class="nav-link">Convert</a>
@@ -42,42 +45,39 @@
 
   <!-- Main Container -->
   <div class="container">
+
     <!-- Header -->
     <header class="header">
       <h1 class="title">Transform Videos into PDFs</h1>
-      <p class="subtitle">Extract frames from your videos and convert them into high-quality PDF documents with advanced OCR technology.</p>
+      <p class="subtitle">
+        Extract frames from your videos and convert them into high-quality PDF documents with advanced OCR technology.
+      </p>
+
       <div class="hero-stats">
-        <div class="stat">
-          <span class="stat-number">99%</span>
-          <span class="stat-label">Accuracy</span>
-        </div>
-        <div class="stat">
-          <span class="stat-number">24/7</span>
-          <span class="stat-label">Available</span>
-        </div>
-        <div class="stat">
-          <span class="stat-number">∞</span>
-          <span class="stat-label">Free</span>
-        </div>
+        <div class="stat"><span class="stat-number">99%</span><span class="stat-label">Accuracy</span></div>
+        <div class="stat"><span class="stat-number">24/7</span><span class="stat-label">Available</span></div>
+        <div class="stat"><span class="stat-number">∞</span><span class="stat-label">Free</span></div>
       </div>
     </header>
 
-    <!-- Features Grid -->
+    <!-- Features -->
     <section id="features" class="features-grid">
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-video"></i></div>
         <h3>Video Processing</h3>
-        <p>Support for multiple video formats including MP4, MOV, and AVI. Extract frames at customizable intervals.</p>
+        <p>Supports MP4, MOV, AVI. Extract frames at custom intervals.</p>
       </div>
+
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-file-pdf"></i></div>
         <h3>PDF Generation</h3>
-        <p>Convert extracted frames into professional PDF documents with high-quality image processing.</p>
+        <p>Convert frames into crisp, professional multi-page PDFs.</p>
       </div>
+
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-brain"></i></div>
         <h3>OCR Technology</h3>
-        <p>Advanced optical character recognition to extract text from images and make PDFs searchable.</p>
+        <p>Extract text from pages to make your PDF fully searchable.</p>
       </div>
     </section>
 
@@ -94,7 +94,7 @@
           <h3>Drop your video here</h3>
           <p class="upload-text">or click to browse files</p>
           <p class="upload-hint">Supports MP4, MOV, AVI up to 500MB</p>
-          <input type="file" id="video" accept="video/*" style="display: none;">
+          <input type="file" id="video" accept="video/*" style="display:none;">
         </div>
 
         <div class="options-panel">
@@ -102,6 +102,7 @@
             <label for="interval">Frame Interval (seconds)</label>
             <input type="number" id="interval" value="2" min="0.1" step="0.1" class="option-select">
           </div>
+
           <div class="option-group">
             <label for="quality">Output Quality</label>
             <select id="quality" class="option-select">
@@ -110,6 +111,7 @@
               <option value="low">Low (Fast Processing)</option>
             </select>
           </div>
+
           <div class="option-group">
             <label class="checkbox-label">
               <input type="checkbox" id="ocr" checked>
@@ -130,67 +132,45 @@
       </div>
     </section>
 
-    <!-- Progress Section -->
+    <!-- Progress -->
     <section class="progress-section">
       <div class="progress-container">
         <div class="progress-info">
           <span class="progress-text" id="progressText">Ready to convert</span>
           <span class="progress-percent" id="progressPercent">0%</span>
         </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
+
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
         <div class="processing-steps">
-          <div class="step active" id="step1">
-            <i class="fas fa-upload"></i>
-            <span>Upload</span>
-          </div>
-          <div class="step" id="step2">
-            <i class="fas fa-cogs"></i>
-            <span>Process</span>
-          </div>
-          <div class="step" id="step3">
-            <i class="fas fa-file-pdf"></i>
-            <span>Generate</span>
-          </div>
-          <div class="step" id="step4">
-            <i class="fas fa-download"></i>
-            <span>Download</span>
-          </div>
+          <div class="step active" id="step1"><i class="fas fa-upload"></i><span>Upload</span></div>
+          <div class="step" id="step2"><i class="fas fa-cogs"></i><span>Process</span></div>
+          <div class="step" id="step3"><i class="fas fa-file-pdf"></i><span>Generate</span></div>
+          <div class="step" id="step4"><i class="fas fa-download"></i><span>Download</span></div>
         </div>
       </div>
     </section>
 
-    <!-- Action Section -->
+    <!-- Action Buttons -->
     <section class="action-section">
-      <button class="convert-btn" id="convert">
-        <i class="fas fa-play"></i>
-        Convert to PDF
-      </button>
-      <button class="convert-btn secondary" id="clear">
-        <i class="fas fa-trash"></i>
-        Clear
-      </button>
+      <button class="convert-btn" id="convert"><i class="fas fa-play"></i> Convert to PDF</button>
+      <button class="convert-btn secondary" id="clear"><i class="fas fa-trash"></i> Clear</button>
     </section>
 
-    <!-- Status Section -->
+    <!-- Status -->
     <section class="status-section">
       <div class="status-text" id="status">Idle</div>
     </section>
 
-    <!-- Results Section -->
-    <section class="results-section" id="resultsSection" style="display: none;">
+    <!-- Results -->
+    <section class="results-section" id="resultsSection" style="display:none;">
       <div class="results-header">
         <h3><i class="fas fa-check-circle"></i> Conversion Complete</h3>
-        <button class="download-btn" id="downloadBtn">
-          <i class="fas fa-download"></i>
-          Download PDF
-        </button>
+        <button class="download-btn" id="downloadBtn"><i class="fas fa-download"></i> Download PDF</button>
       </div>
-      <div class="results-preview" id="resultsPreview">
-        <!-- Preview content will be populated here -->
-      </div>
+      <div class="results-preview" id="resultsPreview"></div>
     </section>
+
   </div>
 
   <!-- Footer -->
@@ -198,8 +178,9 @@
     <div class="footer-content">
       <div class="footer-section">
         <h4>BOOKscan</h4>
-        <p>Transform your videos into searchable PDF documents with advanced AI-powered OCR technology.</p>
+        <p>Transform your videos into searchable PDF documents with advanced AI-powered OCR.</p>
       </div>
+
       <div class="footer-section">
         <h4>Features</h4>
         <ul>
@@ -208,6 +189,7 @@
           <li><a href="#features">Batch Processing</a></li>
         </ul>
       </div>
+
       <div class="footer-section">
         <h4>Support</h4>
         <ul>
@@ -217,11 +199,14 @@
         </ul>
       </div>
     </div>
+
     <div class="footer-bottom">
       <p>&copy; 2024 BOOKscan. All rights reserved.</p>
     </div>
   </footer>
 
+  <!-- JS -->
   <script src="app.js"></script>
+
 </body>
 </html>

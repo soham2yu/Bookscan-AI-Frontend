@@ -1,4 +1,4 @@
-// Frontend/app.js
+// ====== DOM ELEMENTS ======
 const videoInput = document.getElementById('video');
 const convertBtn = document.getElementById('convert');
 const clearBtn = document.getElementById('clear');
@@ -13,7 +13,10 @@ const tabBtns = document.querySelectorAll('.tab-btn');
 const tabContents = document.querySelectorAll('.tab-content');
 const steps = document.querySelectorAll('.step');
 
-// Tab switching with smooth transitions
+const BACKEND_URL = "https://bookscan-ai-backend-6.onrender.com/upload";
+
+
+// ====== TAB SWITCHING ======
 tabBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     tabBtns.forEach(b => b.classList.remove('active'));
@@ -24,40 +27,36 @@ tabBtns.forEach(btn => {
   });
 });
 
-// Add tooltips for better UX
+
+// ====== TOOLTIP SETUP ======
 function addTooltips() {
   const tooltipElements = [
     { selector: '#interval', text: 'Time between frame captures (lower = more frames)' },
-    { selector: '#quality', text: 'Higher quality = larger file size but better image quality' },
-    { selector: '#ocr', text: 'Extract text from images to make PDF searchable' },
+    { selector: '#quality', text: 'Higher quality = larger file size' },
     { selector: '#convert', text: 'Start converting your video to PDF' },
-    { selector: '#clear', text: 'Reset all settings and uploaded files' }
+    { selector: '#clear', text: 'Reset everything' }
   ];
 
   tooltipElements.forEach(item => {
     const element = document.querySelector(item.selector);
-    if (element) {
-      element.setAttribute('title', item.text);
-    }
+    if (element) element.setAttribute('title', item.text);
   });
 }
-
-// Initialize tooltips on load
 document.addEventListener('DOMContentLoaded', addTooltips);
 
-// Upload area click and drag/drop
+
+// ====== DRAG & DROP UPLOAD ======
 uploadArea.addEventListener('click', () => videoInput.click());
-uploadArea.addEventListener('dragover', (e) => {
+uploadArea.addEventListener('dragover', e => {
   e.preventDefault();
   uploadArea.classList.add('dragover');
 });
 uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
-uploadArea.addEventListener('drop', (e) => {
+uploadArea.addEventListener('drop', e => {
   e.preventDefault();
   uploadArea.classList.remove('dragover');
-  const files = e.dataTransfer.files;
-  if (files.length > 0) {
-    videoInput.files = files;
+  if (e.dataTransfer.files.length > 0) {
+    videoInput.files = e.dataTransfer.files;
     updateUploadArea();
   }
 });
@@ -71,96 +70,96 @@ function updateUploadArea() {
       <div class="upload-icon"><i class="fas fa-file-video"></i></div>
       <h3>${file.name}</h3>
       <p class="upload-text">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
-      <p class="upload-hint">Click to change file</p>
+      <p class="upload-hint">Click to change</p>
     `;
   }
 }
 
-// Clear button
+
+// ====== RESET BUTTON ======
 clearBtn.addEventListener('click', () => {
   videoInput.value = '';
   updateUploadArea();
   resetProgress();
   resultsSection.style.display = 'none';
-  statusDiv.textContent = 'Idle';
-  statusDiv.className = 'status-text';
+  showStatus("Idle");
 });
 
-// Reset progress
+
+// ====== PROGRESS RESET ======
 function resetProgress() {
-  progressFill.style.width = '0%';
-  progressPercent.textContent = '0%';
-  progressText.textContent = 'Ready to convert';
+  progressFill.style.width = "0%";
+  progressPercent.textContent = "0%";
+  progressText.textContent = "Ready";
   steps.forEach(step => step.classList.remove('active'));
   document.getElementById('step1').classList.add('active');
 }
 
-// Convert button
+
+// ====== CONVERT BUTTON ======
 convertBtn.addEventListener('click', async () => {
   if (!videoInput.files || videoInput.files.length === 0) {
-    showStatus('Please select a video file first', 'error');
+    showStatus("Please select a video file first", "error");
     return;
   }
 
   const file = videoInput.files[0];
-  const interval = document.getElementById('interval').value || '2';
-  const quality = document.getElementById('quality').value;
-  const ocr = document.getElementById('ocr').checked;
+  const interval = document.getElementById('interval').value || "2";
 
   const form = new FormData();
-  form.append('video', file);
-  form.append('interval', interval);
-  form.append('quality', quality);
-  form.append('ocr', ocr);
+  form.append("video", file);
+  form.append("interval", interval);
 
-  resetProgress();
-  showStatus('Uploading video...', 'info');
+  // UI lock
   convertBtn.disabled = true;
   convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+  resetProgress();
+  showStatus("Uploading video...", "info");
 
   try {
-    updateProgress(10, 'Uploading...');
+    updateProgress(10, "Uploading...");
     document.getElementById('step1').classList.add('active');
 
-    const resp = await fetch('http://localhost:5000/upload', {
-      method: 'POST',
+    // ====== SENDING TO BACKEND ======
+    const resp = await fetch(BACKEND_URL, {
+      method: "POST",
       body: form
     });
 
     if (!resp.ok) {
-      const err = await resp.json().catch(() => ({ error: 'unknown' }));
+      const err = await resp.json().catch(() => ({ error: "Unknown error" }));
       throw new Error(err.error || resp.statusText);
     }
 
-    updateProgress(50, 'Processing video...');
+    updateProgress(50, "Processing video...");
     document.getElementById('step2').classList.add('active');
 
-    // Simulate processing steps
+    // Fake delay for animation
     setTimeout(() => {
-      updateProgress(80, 'Generating PDF...');
+      updateProgress(80, "Generating PDF...");
       document.getElementById('step3').classList.add('active');
-    }, 1000);
+    }, 800);
 
-    const blob = await resp.blob();
+    const pdfBlob = await resp.blob();
 
-    updateProgress(100, 'Complete!');
+    updateProgress(100, "Done!");
     document.getElementById('step4').classList.add('active');
+    showStatus("Conversion completed successfully!", "success");
 
-    showStatus('Conversion completed successfully!', 'success');
     resultsSection.style.display = 'block';
 
-    // Store blob for download
+    // ====== DOWNLOAD BUTTON ======
     downloadBtn.onclick = () => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement("a");
       a.href = url;
-      a.download = 'bookscan_output.pdf';
+      a.download = "bookscan_output.pdf";
       a.click();
       URL.revokeObjectURL(url);
     };
 
-  } catch (e) {
-    showStatus('Conversion failed: ' + e.message, 'error');
+  } catch (err) {
+    showStatus("Conversion failed: " + err.message, "error");
     resetProgress();
   } finally {
     convertBtn.disabled = false;
@@ -168,16 +167,18 @@ convertBtn.addEventListener('click', async () => {
   }
 });
 
+
+// ====== PROGRESS BAR ======
 function updateProgress(percent, text) {
-  progressFill.style.width = percent + '%';
-  progressPercent.textContent = percent + '%';
+  progressFill.style.width = percent + "%";
+  progressPercent.textContent = percent + "%";
   progressText.textContent = text;
 }
 
-function showStatus(message, type = '') {
-  statusDiv.textContent = message;
-  statusDiv.className = 'status-text';
-  if (type) {
-    statusDiv.classList.add(type);
-  }
+
+// ====== STATUS DISPLAY ======
+function showStatus(msg, type = "") {
+  statusDiv.textContent = msg;
+  statusDiv.className = "status-text";
+  if (type) statusDiv.classList.add(type);
 }
